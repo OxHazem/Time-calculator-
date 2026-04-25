@@ -121,19 +121,3 @@ CountdownGUI.exe
 
 ---
 
-# Summary
-
-This project demonstrates:
-
-* Transition from **CLI to GUI application**
-* Use of **Qt Widgets for interface design**
-* Event-driven programming with **signals and slots**
-* Real-time updates using **QTimer**
-* Clean UI design with styling and layout management
-
----
-
-If you want, I can next:
-
-* turn this into a **perfect GitHub README**
-* or compress it into a **CV-ready paragraph**
