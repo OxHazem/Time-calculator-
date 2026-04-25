@@ -149,7 +149,7 @@ void specifictimecountdown() {
 
 
 int main(){
-    string consent;
+    
     cout<<"Welcome for T.d APP"<<endl;
     cout<<"********************************"<<endl;
     MYlocaltime();
