@@ -6,6 +6,7 @@
 #include <chrono> 
 using namespace std;
 tm examtime{};
+bool stopCountdown = false;
 void setdate(){
     
     int day,month,year,day1,month1,year1,hour,hour1;
@@ -41,61 +42,107 @@ void MYlocaltime(){
     
 
 } 
+
+
+void listenForExit() {
+    char c;
+    while (true) {
+        cin >> c;
+        if (c == 'q' || c == 'Q') {
+            stopCountdown = true;
+            break;
+        }
+    }
+}
+
+
 void calc() {
-    time_t elyoum = time(NULL);
+    stopCountdown = false;
+
+    time_t now = time(NULL);
     time_t event_time = mktime(&examtime);
 
-    while (difftime(event_time, elyoum) > 0) {
-        double seconds_left = difftime(event_time, elyoum);
-
-        int days_left = seconds_left / (60 * 60 * 24);
-        int hours_left = (seconds_left - (days_left * 60 * 60 * 24)) / (60 * 60);
-        int minutes_left = (seconds_left - (days_left * 60 * 60 * 24) - (hours_left * 60 * 60)) / 60;
-        int seconds_left_final = seconds_left - (days_left * 60 * 60 * 24) - (hours_left * 60 * 60) - (minutes_left * 60);
-
-        
-        cout << "\rTime left: " << days_left << " days, "
-             << (hours_left < 10 ? "0" : "") << hours_left << " hours, "
-             << (minutes_left < 10 ? "0" : "") << minutes_left << " minutes, "
-             << (seconds_left_final < 10 ? "0" : "") << seconds_left_final << " seconds."
-             << flush;
-
-        this_thread::sleep_for(chrono::seconds(1)); // Wait for 1 second
-
-        elyoum = time(NULL); // Update current time
+    if (difftime(event_time, now) <= 0) {
+        cout << "Error: The date is in the past!" << endl;
+        return;
     }
 
-    cout << "\nEvent time has arrived!" << endl;
+   
+    thread inputThread(listenForExit);
+
+    while (difftime(event_time, now) > 0 && !stopCountdown) {
+        double seconds_left = difftime(event_time, now);
+        long long total_seconds = static_cast<long long>(seconds_left);
+
+        int days = total_seconds / 86400;
+        int hours = (total_seconds % 86400) / 3600;
+        int minutes = (total_seconds % 3600) / 60;
+        int seconds = total_seconds % 60;
+
+        cout << "\rTime left: "
+             << days << "d "
+             << hours << "h "
+             << minutes << "m "
+             << seconds << "s   "
+             << flush;
+
+        this_thread::sleep_for(chrono::seconds(1));
+        now = time(NULL);
+    }
+
+    inputThread.detach(); // stop listening
+
+    if (stopCountdown) {
+        cout << "\nCountdown stopped by user.\n";
+    } else {
+        cout << "\nEvent time has arrived!\n";
+    }
 }
 
 void specifictimecountdown() {
-    int h, m,s;
+    stopCountdown = false; 
+
+    int h, m, s = 0;
+
     cout << "Enter the countdown time:" << endl;
     cout << "Hours: ";
     cin >> h;
     cout << "Minutes: ";
     cin >> m;
-     while (h > 0 || m > 0) {
-        cout << "Time left: " << h << " hours and " << m << " minutes." <<s<<" seconds"<< endl;
-        this_thread::sleep_for(chrono::seconds(1)); // Wait for 1 minute
-        if(s>0){
+
+    cout << "Press 'q' then Enter to stop...\n";
+
+    thread inputThread(listenForExit);
+    inputThread.detach();
+
+    while ((h > 0 || m > 0 || s > 0) && !stopCountdown) { 
+
+        cout << "\rTime left: "
+             << h << " hours, "
+             << m << " minutes, "
+             << s << " seconds   "
+             << flush;
+
+        this_thread::sleep_for(chrono::seconds(1));
+
+        if (s > 0) {
             s--;
-        
-        }else if (m > 0) {
+        } else if (m > 0) {
             m--;
-            s=59;
+            s = 59;
         } else if (h > 0) {
-            h--; 
+            h--;
             m = 59;
-            s=59;
+            s = 59;
         }
     }
-    
 
-    // Final update at the last minute
-    cout << "Time left: 0 hours and 0 minutes." << endl;
-    this_thread::sleep_for(chrono::seconds(60)); // Wait for the last minute to pass
-    cout << "Time's up!" << endl;
+    if (stopCountdown) {
+        cout << "\nCountdown stopped.\n";
+    } else {
+        cout << "\rTime left: 0 hours, 0 minutes, 0 seconds   \n";
+        cout << "Time's up!\n";
+    }
 }
 
 
@@ -105,13 +152,10 @@ int main(){
     string consent;
     cout<<"Welcome for T.d APP"<<endl;
     cout<<"********************************"<<endl;
-    cout<<"Dear user the app will need to get your local time please approve [y/n]: ";
-    cin>>consent;
-    if ((consent =="y")||(consent =="Y")){
-        MYlocaltime();
-        cout<<"[1]set specific time countdown\n [2] set specific date or event count down\n"<<endl;
-        cout<<"Choose an option: "<<endl;
-        int choice;
+    MYlocaltime();
+    cout<<"[1]set specific time countdown\n[2]set specific date or event count down\n"<<endl;
+    cout<<"Choose an option: "<<endl;
+    int choice;
         cin>>choice;
         if (choice ==1){
             specifictimecountdown();
@@ -119,9 +163,5 @@ int main(){
             setdate();
             calc();
         }
-    }else{
-        cout<<"App will not run without getting your local time."<<endl;
-        return 0;
-    }
+    return 0;}
     
-}
