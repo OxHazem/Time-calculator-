@@ -1,0 +1,139 @@
+Here’s a clean, structured description you can use for your project (README or CV). I’ll keep it professional but clear.
+
+---
+
+#  Project Description
+
+This project is a **Countdown Timer Application** implemented in C++ with two different interfaces:
+
+### 1. CLI Version
+
+The first version of the project is a **command-line application** implemented in `main.cpp`.
+It contains:
+
+* The core countdown logic
+* Time calculations (seconds → minutes → hours)
+* User input handling through the terminal
+* A real-time countdown using loops and delays
+
+This version was used to design and test the core functionality of the application before moving to a graphical interface.
+
+---
+
+### 2. GUI Version (Qt)
+
+The second version is a **Graphical User Interface (GUI)** built using **Qt Widgets**.
+
+Instead of manually creating all project files, the GUI project was generated using **Qt Creator**, which automatically sets up the required configuration and build system.
+
+The implementation focuses on three main files:
+
+* **`mainwindow.h`**
+  Defines the structure of the main window and declares UI components such as:
+
+  * Display label (countdown)
+  * Input field
+  * Control buttons (Start / Reset)
+  * Timer object
+
+* **`mainwindow.cpp`**
+  Contains the full GUI logic:
+
+  * Building the interface layout (horizontal + vertical layouts)
+  * Styling using Qt stylesheets (dark theme)
+  * Handling user input (`hh:mm:ss`)
+  * Countdown logic using `QTimer`
+  * Updating the display every second
+  * Input validation and formatting
+  * Visual feedback (color changes near countdown end)
+
+* **`main.cpp`**
+  Entry point of the GUI application.
+  It initializes the Qt application and displays the main window.
+
+---
+
+#  GUI Overview (Short Description)
+
+The GUI version provides a **modern, dark-themed countdown timer** with:
+
+* A large, centered digital time display
+* Support for **hours, minutes, and seconds (hh:mm:ss)**
+* A user input field with enforced format
+* Start and Reset controls
+* Real-time updates using Qt’s event system
+* Visual warning (color change) when time is about to finish
+
+The interface is designed to be simple, responsive, and visually clear.
+
+---
+
+#  How to Run the Project
+
+##  Linux (Terminal)
+
+### Requirements:
+
+* Qt6 installed (`qt6-base-dev`, `qmake6`)
+
+### Steps:
+
+```bash
+cd CountdownGUI
+qmake6
+make
+env -i DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY ./CountdownGUI
+```
+
+---
+
+##  Windows
+
+### Option 1: Using Qt Creator (Recommended)
+
+1. Open **Qt Creator**
+2. Open the project folder
+3. Click **Run (▶)**
+
+---
+
+### Option 2: Using Terminal (MinGW)
+
+1. Open **Qt Command Prompt**
+2. Navigate to project folder:
+
+```bash
+cd CountdownGUI
+```
+
+3. Build:
+
+```bash
+qmake
+mingw32-make
+```
+
+4. Run:
+
+```bash
+CountdownGUI.exe
+```
+
+---
+
+# Summary
+
+This project demonstrates:
+
+* Transition from **CLI to GUI application**
+* Use of **Qt Widgets for interface design**
+* Event-driven programming with **signals and slots**
+* Real-time updates using **QTimer**
+* Clean UI design with styling and layout management
+
+---
+
+If you want, I can next:
+
+* turn this into a **perfect GitHub README**
+* or compress it into a **CV-ready paragraph**
